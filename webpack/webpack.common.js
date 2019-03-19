@@ -76,14 +76,30 @@ const config = {
                 antd: {
                     name: 'antd',
                     test: /[\\/](@?antd?\S*)|(rc-\S+)/,
-                    maxSize: 200000,
-                    priority: 1,
+                    priority: 0,
+                    maxSize: 300000,
+                    reuseExistingChunk: true,
                     enforce: true
                 },
                 react: {
                     name: 'react',
                     test: /[\\/]\S*react\S*/,
                     priority: 1,
+                    reuseExistingChunk: true,
+                    enforce: true
+                },
+                moment: {
+                    name: 'moment',
+                    test: /[\\/]moment/,
+                    priority: 0,
+                    reuseExistingChunk: true,
+                    enforce: true
+                },
+                lodash: {
+                    name: 'lodash',
+                    test: /[\\/]lodash\S*/,
+                    priority: 0,
+                    reuseExistingChunk: true,
                     enforce: true
                 },
                 vendor: {

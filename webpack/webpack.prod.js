@@ -46,6 +46,7 @@ const config = merge(common.config, {
         ]
     },
 	performance: {
+        maxEntrypointSize: 600000,
 		assetFilter: (assetFilename) => {
 			return !assetFilename.includes('antd');
 		}

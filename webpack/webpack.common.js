@@ -1,9 +1,7 @@
 const path = require('path');
 const TsImportPlugin = require('ts-import-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 const plugins = [
     new CleanWebpackPlugin(),
@@ -74,11 +72,11 @@ const config = {
             maxAsyncRequests: 5,
             maxInitialRequests: 3,
             automaticNameDelimiter: '~',
-            name: true,
             cacheGroups: {
                 antd: {
                     name: 'antd',
                     test: /[\\/](@?antd?\S*)|(rc-\S+)/,
+                    maxSize: 200000,
                     priority: 1,
                     enforce: true
                 },
@@ -95,19 +93,12 @@ const config = {
                     //     return `npm.${packageName.replace('@', '')}`;
                     // },
                     test: /[\\/]node_modules[\\/]/,
-                    priority: -1,
+                    priority: -10,
                     reuseExistingChunk: true,
                     enforce: true
                 }
             }
-        },
-        minimizer: [
-            new UglifyJsPlugin({
-                cache: true,
-                parallel: true
-            }),
-            new OptimizeCSSAssetsPlugin({})
-        ]
+        }
     }
 };
 

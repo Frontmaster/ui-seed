@@ -2,6 +2,8 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const config = merge(common.config, {
     mode: 'production',
@@ -33,6 +35,21 @@ const config = merge(common.config, {
         new webpack.optimize.ModuleConcatenationPlugin(),
         new webpack.NoEmitOnErrorsPlugin()
     ],
+    optimization: {
+        ...common.config.optimization,
+        minimizer: [
+            new UglifyJsPlugin({
+                cache: true,
+                parallel: true
+            }),
+            new OptimizeCSSAssetsPlugin({})
+        ]
+    },
+	performance: {
+		assetFilter: (assetFilename) => {
+			return !assetFilename.includes('antd');
+		}
+	}
 });
 
 module.exports = config;

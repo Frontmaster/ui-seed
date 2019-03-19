@@ -1,23 +1,32 @@
 const path = require('path');
 const webpack = require('webpack');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TsImportPlugin = require('ts-import-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const config = {
-    entry: './src/index.js',
+    entry: './src/index.tsx',
     output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: '[name].[contenthash].js',
+        path: path.resolve('../dist'),
+        filename: '[name].bundle.js',
+    },
+    resolve: {
+        extensions: ['*', '.js', '.ts', '.tsx']
     },
     module: {
         rules: [
             {
-                test: /\.(sc|c)ss$/,
-                use: [
-                    MiniCssExtractPlugin.loader,
-                    'css-loader',
-                    'sass-loader'
-                ],
+                test: /\.(tsx?)$/,
+                exclude: path.resolve('../node_modules'),
+                loader: 'ts-loader',
+                options: {
+                    transpileOnly: true,
+                    getCustomTransformers: () => ({
+                        before: [ TsImportPlugin({style: true}) ]
+                    })
+                }
             },
             {
                 test: /\.(jpe?g|png|gif)$/,
@@ -47,29 +56,57 @@ const config = {
         ]
     },
     plugins: [
-        new MiniCssExtractPlugin({
-            filename: 'style.[contenthash].css'
-        }),
+        // new MiniCssExtractPlugin({
+        //     filename: '[contenthash].css'
+        // }),
+        new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
-            inject: false,
-            hash: true,
             template: './src/index.html',
             filename: 'index.html'
         }),
-        new webpack.HashedModuleIdsPlugin()
+        new webpack.HotModuleReplacementPlugin()
     ],
-    devtool: 'source-map',
     optimization: {
+        runtimeChunk: 'single',
         splitChunks: {
             cacheGroups: {
+                antd: {
+                    test: /[\\/](@?antd\S*)/,
+                    name: 'antd',
+                    chunks: 'all',
+                    priority: 1,
+                    enforce: true
+                },
+                react: {
+                    test: /[\\/]\S*react\S*/,
+                    name: 'react',
+                    chunks: 'all',
+                    priority: 1,
+                    enforce: true
+                },
                 vendor: {
                     test: /[\\/]node_modules[\\/]/,
-                    name: 'vendors',
-                    chunks: 'all'
+                    name: 'vendor',
+                    chunks: 'all',
+                    priority: -1,
+                    enforce: true
                 }
-            },
-            chunks: 'all'
-        }
+            }
+        },
+        minimizer: [
+            new UglifyJsPlugin({
+                cache: true,
+                parallel: true
+            }),
+            new OptimizeCSSAssetsPlugin({})
+        ]
+    },
+    devServer: {
+        contentBase: './dist',
+        port: 9000,
+        host: 'localhost',
+        hot: true,
+        open: true
     }
 };
 

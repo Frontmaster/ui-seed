@@ -1,2 +1,2 @@
 # ui-seed
-This is a seed repository for a react + sass project
+This is a seed repository for a react project.

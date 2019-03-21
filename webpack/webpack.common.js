@@ -2,13 +2,16 @@ const path = require('path');
 const TsImportPlugin = require('ts-import-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 
 const plugins = [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
+		title: 'Caching',
         template: './src/index.html',
         filename: 'index.html'
-    })
+    }),
+	new webpack.HashedModuleIdsPlugin()
 ];
 
 const rules = [
@@ -52,12 +55,11 @@ const rules = [
 
 const config = {
     entry: {
-        app: './src/index.tsx'
+        main: './src/index.tsx'
     },
     output: {
         path: path.resolve('./dist'),
-        filename: '[name].bundle.js',
-        chunkFilename: '[name].bundle.js',
+		filename: '[name].[contenthash].js'
     },
     resolve: {
         extensions: ['*', '.js', '.ts', '.tsx']

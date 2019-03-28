@@ -10,6 +10,7 @@ module.exports = merge(common.config, {
         contentBase: './dist',
         port: 9000,
         host: 'localhost',
+        historyApiFallback: true,
         hot: true,
         open: true
     },

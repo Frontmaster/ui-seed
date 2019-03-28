@@ -90,16 +90,23 @@ const config = {
                     reuseExistingChunk: true,
                     enforce: true
                 },
+                redux: {
+                    name: 'redux',
+                    test: /[\\/]\S*redux\S*/,
+                    priority: 0,
+                    reuseExistingChunk: true,
+                    enforce: true
+                },
                 moment: {
                     name: 'moment',
-                    test: /[\\/]moment/,
+                    test: /[\\/]\S*moment\S*/,
                     priority: 0,
                     reuseExistingChunk: true,
                     enforce: true
                 },
                 lodash: {
                     name: 'lodash',
-                    test: /[\\/]lodash\S*/,
+                    test: /[\\/]\S*lodash\S*/,
                     priority: 0,
                     reuseExistingChunk: true,
                     enforce: true
